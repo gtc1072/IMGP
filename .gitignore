@@ -4,3 +4,10 @@
 *.sdf
 *.sln
 *.suo
+/imgp/x64/*
+/imgp/*.vcxproj
+/imgp/*.filters
+/imgp/stdafx.h
+/imgp/stdafx.cpp
+/imgp/targetver.h
+/imgp/ReadMe.txt
