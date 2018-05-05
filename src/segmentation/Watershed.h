@@ -6,10 +6,12 @@
 class IMGP_Watershed
 {
 public:
-	virtual ~IMGP_Watershed(){}
+	explicit IMGP_Watershed(IMGP_WatershedType type);
+	virtual ~IMGP_Watershed();
 	template<typename T>
-	bool watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed) = 0;
-	static std::shared_ptr<IMGP_Watershed> create(IMGP_WatershedType type);
+	bool watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
+private:
+	IMGP_WatershedType m_type;
 };
 
 #endif

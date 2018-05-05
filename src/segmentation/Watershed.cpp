@@ -1,27 +1,18 @@
 #include "Watershed.h"
-class UnMarker_Watershed : public IMGP_Watershed
-{
-public:
-	virtual ~UnMarker_Watershed(){}
-	template<typename T>
-	bool watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed)
-	{
-		return true;
-	}
-};
 
-class Markered_Watershed : public IMGP_Watershed
+IMGP_Watershed::IMGP_Watershed(IMGP_WatershedType type)
 {
-public:
-	virtual ~Markered_Watershed(){}
-	template<typename T>
-	bool watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed)
-	{
-		return true;
-	}
-};
+	m_type = type;
+}
 
-std::shared_ptr<IMGP_Watershed> IMGP_Watershed::create(IMGP_WatershedType type)
+IMGP_Watershed::~IMGP_Watershed()
 {
-	return nullptr;
+
+}
+
+template<typename T>
+bool IMGP_Watershed::watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed)
+{
+	printf("watershed_tranform");
+	return true;
 }

@@ -3,6 +3,7 @@
 
 //#include "stdafx.h"
 #include <tchar.h>
+#include "..\src\segmentation\Watershed.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
