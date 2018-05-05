@@ -33,6 +33,9 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\segmentation\Watershed.h">
+      <Filter>ImageSegment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -40,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="imgp.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\segmentation\Watershed.cpp">
+      <Filter>ImageSegment</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
