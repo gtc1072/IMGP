@@ -1,0 +1,6 @@
+/ipch/*
+/x64/*
+*.opensdf
+*.sdf
+*.sln
+*.suo
