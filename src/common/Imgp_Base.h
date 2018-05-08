@@ -12,7 +12,7 @@ public:
 protected:
 	IMGP_Base();
 public:
-	static Pointer New();
+	IMGP_NEW(Self);
 };
 
 #endif

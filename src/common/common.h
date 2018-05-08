@@ -6,4 +6,9 @@
 
 enum IMGP_WatershedType{ UNMARKER = 0, MARKERD };
 
+#define IMGP_NEW(x) \
+	static Pointer New() {\
+		return 	Pointer(new (x)); \
+	}\
+
 #endif

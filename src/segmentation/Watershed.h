@@ -12,7 +12,7 @@ public:
 protected:
 	IMGP_Watershed();
 public:
-	static Pointer New();
+	IMGP_NEW(Self);
 	template<typename T>
 	bool watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
 private:
