@@ -1,15 +1,18 @@
 // imgp.cpp : 定义控制台应用程序的入口点。
 //
 
-//#include "stdafx.h"
 #include <tchar.h>
 #include "..\src\segmentation\Watershed.h"
 
+void test()
+{
+	IMGP_Watershed::Pointer p2 = IMGP_Watershed::New();
+	std::cout << p2.use_count() << std::endl;
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	IMGP_Watershed w(UNMARKER);
-	float *p = new float[100];
-	w.watershed_tranform(p, nullptr, 10, 10, 1, nullptr, nullptr);
+	test();
 	return 0;
 }
 

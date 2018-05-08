@@ -1,13 +1,13 @@
 #include "Watershed.h"
 
-IMGP_Watershed::IMGP_Watershed(IMGP_WatershedType type)
+IMGP_Watershed::IMGP_Watershed()
 {
-	m_type = type;
+	
 }
 
 IMGP_Watershed::~IMGP_Watershed()
 {
-
+	std::cout << "IMGP_Watershed Destrutor" << std::endl;
 }
 
 template<typename T>
@@ -24,3 +24,8 @@ template bool IMGP_Watershed::watershed_tranform(unsigned short *pData, int *pMa
 template bool IMGP_Watershed::watershed_tranform(short *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
 template bool IMGP_Watershed::watershed_tranform(unsigned int *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
 template bool IMGP_Watershed::watershed_tranform(double *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
+
+std::shared_ptr<IMGP_Watershed> IMGP_Watershed::New()
+{
+	return std::shared_ptr<IMGP_Watershed>(new IMGP_Watershed);
+}
