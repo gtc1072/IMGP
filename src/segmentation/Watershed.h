@@ -3,7 +3,7 @@
 
 #include "..\common\Imgp_Base.h"
 
-class IMGP_Watershed : public IMGP_Base
+class IMGP_Watershed
 {
 public:
 	typedef IMGP_Watershed			Self;
@@ -13,10 +13,13 @@ protected:
 	IMGP_Watershed();
 public:
 	IMGP_NEW(Self);
-	template<typename T>
-	bool watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
+	bool watershed_tranform(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed);
 private:
-	IMGP_WatershedType m_type;
+	bool watershed_unmarker(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed);
+	bool watershed_markered(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed);
+private:
+	IMGP_WatershedType	m_watershedType;
+	IMGP_ConnectType	m_connectType;
 };
 
 #endif

@@ -2,7 +2,8 @@
 
 IMGP_Watershed::IMGP_Watershed()
 {
-	
+	m_watershedType =	UNMARKER;
+	m_connectType	=	Four_Connection;
 }
 
 IMGP_Watershed::~IMGP_Watershed()
@@ -10,22 +11,27 @@ IMGP_Watershed::~IMGP_Watershed()
 	std::cout << "IMGP_Watershed Destrutor" << std::endl;
 }
 
-template<typename T>
-bool IMGP_Watershed::watershed_tranform(T *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed)
+bool IMGP_Watershed::watershed_tranform(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed)
 {
-	printf("watershed_tranform");
+	bool ret = false;
+	if (m_watershedType == UNMARKER)
+	{
+		ret = watershed_unmarker(Data, Marker, Basin, Watershed);
+	}
+	else if (m_watershedType == MARKERD)
+	{
+		ret = watershed_markered(Data, Marker, Basin, Watershed);
+	}
+	return ret;
+}
+
+bool IMGP_Watershed::watershed_unmarker(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed)
+{
 	return true;
 }
-template bool IMGP_Watershed::watershed_tranform(int *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
-template bool IMGP_Watershed::watershed_tranform(float *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
-template bool IMGP_Watershed::watershed_tranform(unsigned char *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
-template bool IMGP_Watershed::watershed_tranform(char *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
-template bool IMGP_Watershed::watershed_tranform(unsigned short *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
-template bool IMGP_Watershed::watershed_tranform(short *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
-template bool IMGP_Watershed::watershed_tranform(unsigned int *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
-template bool IMGP_Watershed::watershed_tranform(double *pData, int *pMarker, int width, int height, int bandcount, int *pBasin, unsigned char *pWatershed);
 
-//std::shared_ptr<IMGP_Watershed> IMGP_Watershed::New()
-//{
-//	return std::shared_ptr<IMGP_Watershed>(new IMGP_Watershed);
-//}
+bool IMGP_Watershed::watershed_markered(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed)
+{
+	return true;
+}
+
