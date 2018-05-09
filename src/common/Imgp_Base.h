@@ -15,7 +15,8 @@ public:
 	unsigned int	width() const;
 	unsigned int	height() const;
 	unsigned int	stride() const;
-	unsigned int	step_length() const;
+	unsigned int	byte_stride_length() const;
+	unsigned int	byte_element_length() const;
 	unsigned int	channels() const;
 	unsigned char*	data() const;
 	IMGP_ImageType  type() const;
@@ -28,7 +29,7 @@ private:
 	unsigned int			m_width;
 	unsigned int			m_height;
 	unsigned int			m_stride;
-	unsigned int			m_step_length;
+	unsigned int			m_step_byte_row, m_step_byte_element;
 	unsigned int			m_channels;
 	unsigned char			*m_pData;
 	IMGP_ImageType			m_type;

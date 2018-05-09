@@ -3,6 +3,7 @@
 
 #include <tchar.h>
 #include "..\src\segmentation\Watershed.h"
+#include "..\src\common\Imgp_Data.hpp"
 
 void test()
 {
@@ -12,7 +13,8 @@ void test()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	test();
+	char p1, p2;
+	DataConvertFunc fun = get_data_convert_func(IMGP_IMAGE_TYPE_DEPTH(IMGP_U16C1), IMGP_IMAGE_TYPE_DEPTH(IMGP_F64C1));
+	fun((void*)&p1, 0, 0, (void*)&p2, 0, 0, 1, 0);
 	return 0;
 }
-
