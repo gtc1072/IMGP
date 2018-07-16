@@ -21,10 +21,10 @@ void test_MLP()
 	layer.push_back(200);
 	layer.push_back(50);
 	layer.push_back(10);
-	std::shared_ptr<ML::IMGP_Mlp> mlp = ML::IMGP_Mlp::create();
+	ML::IMGP_Mlp::Pointer mlp = ML::IMGP_Mlp::create();
 	mlp->set_activation_function(ML::LEAKY_RELU);
 	mlp->set_cost_function(ML::CROSS_ENTROPY);
-	mlp->set_dropout_enable(true);
+	mlp->set_dropout_enable(false);
 	mlp->set_dropout_regulation_para(0.5);
 	mlp->set_hidden_layers(layer);
 	mlp->set_input_preprocess(ML::ZERO_MEAN_GAUSSIAN_DENOISE);
@@ -57,7 +57,7 @@ void test_watershed()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	test_watershed();
+	test_MLP();
 	_getch();
 	return 0;
 }

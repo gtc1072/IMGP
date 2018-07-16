@@ -18,6 +18,8 @@ namespace IMGP
 		class IMGP_Mlp
 		{
 		public:
+			typedef IMGP_Mlp				Self;
+			typedef std::shared_ptr<Self>	Pointer;
 			virtual ~IMGP_Mlp(){}
 			virtual bool train(std::string data_file_path) = 0;
 			virtual bool train(std::vector<std::vector<double>> data) = 0;
@@ -49,7 +51,7 @@ namespace IMGP
 
 			virtual void set_mini_batch_size(int size) = 0;
 
-			static std::shared_ptr<IMGP_Mlp> create();
+			static Pointer create();
 		};
 	}
 }
