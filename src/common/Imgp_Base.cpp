@@ -188,7 +188,10 @@ namespace IMGP{
 		else if (data && bShallow) //shallow copy
 			m_pData = (unsigned char*)data;
 		else //allocate 
+		{
 			m_pData = new unsigned char[m_step_byte_row * m_height];
+			//memset(m_pData, 0, m_step_byte_row * m_height);
+		}
 		if (m_channels == 1)
 			m_color_space = IMGP_GRAY;
 		else

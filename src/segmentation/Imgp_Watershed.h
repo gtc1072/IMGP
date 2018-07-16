@@ -15,13 +15,10 @@ namespace IMGP{
 		IMGP_Watershed();
 	public:
 		IMGP_NEW(Self);
-		bool watershed_tranform(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed);
+		bool watershed_tranform(IMGP_Image Data, IMGP_Image &Basin, IMGP_Image &Watershed, IMGP_WatershedType type = UNMARKER, IMGP_Image *Marker = nullptr);
 	private:
-		bool watershed_unmarker(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed);
+		bool watershed_unmarker(IMGP_Image Data, IMGP_Image &Basin, IMGP_Image &Watershed);
 		bool watershed_markered(IMGP_Image Data, IMGP_Image &Marker, IMGP_Image &Basin, IMGP_Image &Watershed);
-	private:
-		IMGP_WatershedType	m_watershedType;
-		IMGP_ConnectType	m_connectType;
 	};
 }
 

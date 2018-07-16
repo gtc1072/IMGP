@@ -9,10 +9,8 @@
 
 using namespace IMGP;
 
-void test()
+void test_MLP()
 {
-	/*IMGP_Image img(100, 100, IMGP_U8C3);
-	IMGP_Image out = img.convert(IMGP_F64C3, 1.0, 0.0);*/
 	std::vector<unsigned int> sparse;
 	sparse.push_back(50);
 	sparse.push_back(20);
@@ -49,9 +47,17 @@ void test()
 	mlp->save_model("model.txt");
 }
 
+void test_watershed()
+{
+	IMGP_Watershed::Pointer pWatershed = IMGP_Watershed::New();
+	IMGP_Image image(100, 100, IMGP_U8C1);
+	IMGP_Image basin, watershed;
+	pWatershed->watershed_tranform(image, basin, watershed);
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	test();
+	test_watershed();
 	_getch();
 	return 0;
 }
