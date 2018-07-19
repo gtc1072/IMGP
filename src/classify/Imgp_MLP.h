@@ -22,9 +22,11 @@ namespace IMGP
 			typedef std::shared_ptr<Self>	Pointer;
 			virtual ~IMGP_Mlp(){}
 			virtual bool train(std::string data_file_path) = 0;
-			virtual bool train(std::vector<std::vector<double>> data) = 0;
+			virtual bool train(std::vector<std::vector<double>> &data, std::vector<int> &out) = 0;
 			virtual bool load_model(std::string model_path) = 0;
 			virtual bool save_model(std::string model_path) = 0;
+			virtual bool set_validation_sample(std::string data_file_path) = 0;
+			virtual bool set_validation_sample(std::vector<std::vector<double>> &data, std::vector<int> &out) = 0;
 			virtual void set_activation_function(ACTIVATION_FUNCTION_TYPE type) = 0;
 			virtual void set_cost_function(COST_FUNCTION_TYPE type) = 0;
 			virtual void set_learning_rate(double learn_rate) = 0;

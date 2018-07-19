@@ -122,10 +122,12 @@ namespace IMGP
 			IMGP_Mlp_impl();
 			virtual ~IMGP_Mlp_impl();
 			virtual bool train(std::string data_file_path);
-			virtual bool train(std::vector<std::vector<double>> data);
+			virtual bool train(std::vector<std::vector<double>> &data, std::vector<int> &out);
 			virtual void set_activation_function(ACTIVATION_FUNCTION_TYPE type);
 			virtual bool load_model(std::string model_path);
 			virtual bool save_model(std::string model_path);
+			virtual bool set_validation_sample(std::string data_file_path);
+			virtual bool set_validation_sample(std::vector<std::vector<double>> &data, std::vector<int> &out);
 			virtual void set_cost_function(COST_FUNCTION_TYPE type);
 			virtual void set_learning_rate(double learn_rate);
 			virtual void set_leaky_relu_para(double alpha);
@@ -188,6 +190,8 @@ namespace IMGP
 			int									m_max_iter;
 			std::vector<std::vector<double>>	m_input;
 			std::vector<int>					m_output;
+			std::vector<std::vector<double>>	m_validation_input;
+			std::vector<int>					m_validation_output;
 			ACTIVATION_FUNCTION_TYPE			m_activation_fun_id;
 			COST_FUNCTION_TYPE					m_err_type;
 			WEIGHT_INIT_TYPE					m_weight_initialization_type;

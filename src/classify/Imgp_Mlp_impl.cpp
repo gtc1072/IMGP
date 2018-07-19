@@ -85,7 +85,7 @@ namespace IMGP
 
 		void IMGP_Mlp_impl::set_termination_para(int max_iters, double eps)
 		{
-			m_max_iter = max_iters < 10 ? 10 : m_max_iter;
+			m_max_iter = max_iters < 10 ? 10 : max_iters;
 			m_error_eps = eps < 1.0e-009 ? 1.0e-009 : eps;
 		}
 
@@ -120,7 +120,7 @@ namespace IMGP
 			m_learn_moment = m_learn_moment < 0 ? 0 : (m_learn_moment > 0.9 ? 0.9 : m_learn_moment);
 
 			m_learn_decay = decay;
-			m_learn_decay = m_learn_decay < 0 ? 0 : (m_learn_decay > 0.9 ? 0.9 : m_learn_decay);
+			m_learn_decay = m_learn_decay < 0 ? 0 : (m_learn_decay > 0.9999 ? 0.9999 : m_learn_decay);
 		}
 
 		void IMGP_Mlp_impl::set_l1_l2_regulation_para(double lamda)
@@ -169,6 +169,13 @@ namespace IMGP
 					m_input[j][i] = (m_input[j][i] - m_input_min[i]) / (m_input_max[i] - m_input_min[i]);
 				}
 			}
+			for (int j = 0; j < m_validation_input.size(); ++j)
+			{
+				for (int i = 0; i < input_demension; ++i)
+				{
+					m_validation_input[j][i] = (m_validation_input[j][i] - m_input_min[i]) / (m_input_max[i] - m_input_min[i]);
+				}
+			}
 		}
 
 		void IMGP_Mlp_impl::input_process_normalise1()
@@ -198,6 +205,14 @@ namespace IMGP
 					m_input[j][i] = m_input[j][i] * 2.0 - 1.0;
 				}
 			}
+			for (int j = 0; j < m_validation_input.size(); ++j)
+			{
+				for (int i = 0; i < input_demension; ++i)
+				{
+					m_validation_input[j][i] = (m_validation_input[j][i] - m_input_min[i]) / (m_input_max[i] - m_input_min[i]);
+					m_validation_input[j][i] = m_validation_input[j][i] * 2.0 - 1.0;
+				}
+			}
 		}
 
 		void IMGP_Mlp_impl::input_process_zero_mean()
@@ -224,6 +239,13 @@ namespace IMGP
 				for (int i = 0; i < input_demension; ++i)
 				{
 					m_input[j][i] -= m_input_mean[i];
+				}
+			}
+			for (int j = 0; j < m_validation_input.size(); ++j)
+			{
+				for (int i = 0; i < input_demension; ++i)
+				{
+					m_validation_input[j][i] -= m_input_mean[i];
 				}
 			}
 		}
@@ -267,8 +289,18 @@ namespace IMGP
 				for (int i = 0; i < input_demension; ++i)
 				{
 					value = m_input[j][i] - m_input_mean[i];
-					m_input[j][i] = 1.0 - std::exp(-0.5 * value * value / (m_input_stddev[i] * m_input_stddev[i]));
+					m_input[j][i] = 1.0 - std::exp(-0.5 * value * value / (m_input_stddev[i] * m_input_stddev[i] + 1.0e-8));
 					m_input[j][i] *= value < 0 ? -1.0 : 1.0;
+				}
+			}
+
+			for (int j = 0; j < m_validation_input.size(); ++j)
+			{
+				for (int i = 0; i < input_demension; ++i)
+				{
+					value = m_validation_input[j][i] - m_input_mean[i];
+					m_validation_input[j][i] = 1.0 - std::exp(-0.5 * value * value / (m_input_stddev[i] * m_input_stddev[i] + 1.0e-8));
+					m_validation_input[j][i] *= value < 0 ? -1.0 : 1.0;
 				}
 			}
 		}
@@ -329,7 +361,7 @@ namespace IMGP
 				{
 					for (int i = 0; i < input_demension; ++i)
 					{
-						prob[j][i] = std::exp(-0.5 * (m_input[j][i] - m_input_mean[i]) * (m_input[j][i] - m_input_mean[i]) / (m_input_stddev[i] * m_input_stddev[i]));
+						prob[j][i] = std::exp(-0.5 * (m_input[j][i] - m_input_mean[i]) * (m_input[j][i] - m_input_mean[i]) / (m_input_stddev[i] * m_input_stddev[i] + 1.0e-8));
 					}
 				}
 				eps_diff = -1.0;
@@ -349,7 +381,14 @@ namespace IMGP
 			{
 				for (int i = 0; i < input_demension; ++i)
 				{
-					m_input[j][i] = ((m_input[j][i] - m_input_mean[i]) < 0 ? -1.0 : 1.0) * std::exp(-0.5 * (m_input[j][i] - m_input_mean[i]) * (m_input[j][i] - m_input_mean[i]) / (m_input_stddev[i] * m_input_stddev[i]));
+					m_input[j][i] = ((m_input[j][i] - m_input_mean[i]) < 0 ? -1.0 : 1.0) * std::exp(-0.5 * (m_input[j][i] - m_input_mean[i]) * (m_input[j][i] - m_input_mean[i]) / (m_input_stddev[i] * m_input_stddev[i] + 1.0e-8));
+				}
+			}
+			for (int j = 0; j < m_validation_input.size(); ++j)
+			{
+				for (int i = 0; i < input_demension; ++i)
+				{
+					m_validation_input[j][i] = ((m_validation_input[j][i] - m_input_mean[i]) < 0 ? -1.0 : 1.0) * std::exp(-0.5 * (m_validation_input[j][i] - m_input_mean[i]) * (m_validation_input[j][i] - m_input_mean[i]) / (m_input_stddev[i] * m_input_stddev[i] + 1.0e-8));
 				}
 			}
 		}
@@ -380,6 +419,20 @@ namespace IMGP
 			}
 		}
 
+		bool IMGP_Mlp_impl::set_validation_sample(std::string data_file_path)
+		{
+			return false;
+		}
+
+		bool IMGP_Mlp_impl::set_validation_sample(std::vector<std::vector<double>> &data, std::vector<int> &out)
+		{
+			bool ret = false;
+			if (data.size() < 10 || data.size() != out.size()) return ret;
+			m_validation_input = data;
+			m_validation_output = out;
+			return ret;
+		}
+
 		bool IMGP_Mlp_impl::train(std::string data_file_path)
 		{
 			bool ret = load_sample(data_file_path);
@@ -391,9 +444,12 @@ namespace IMGP
 			return ret;
 		}
 
-		bool IMGP_Mlp_impl::train(std::vector<std::vector<double>> data)
+		bool IMGP_Mlp_impl::train(std::vector<std::vector<double>> &data, std::vector<int> &out)
 		{
 			bool ret = false;
+			if (data.size() < 10 || data.size() != out.size()) return ret;
+			m_output = out;
+			m_input = data;
 			preprocess_input();
 			ret = init_classifier();
 			return ret;
@@ -492,17 +548,33 @@ namespace IMGP
 			{
 				init_weight_mat();
 				set_weight_mat_init_value();
+				if (m_batch_size > m_sample_count)
+				{
+					m_batch_size = 1;
+				}
 				ret = train_batch();
 			}
-			printf("final result:\n");
 			if (ret)
 			{
+				int mismatchCount_train = 0;
 				for (size_t i = 0; i < m_input.size(); ++i)
 				{
 					double err_i = 0;
 					int cls = getPredict(m_input[i], m_output[i], err_i);
 					printf("%d---[%d,%d,%.4f]\n", i, cls, m_output[i], err_i);
+					if (cls != m_output[i]) mismatchCount_train++;
 				}
+				
+				int mismatchCount_validation = 0;
+				for (size_t i = 0; i < m_validation_input.size(); ++i)
+				{
+					double err_i = 0;
+					int cls = getPredict(m_validation_input[i], m_validation_output[i], err_i);
+					printf("%d---[%d,%d,%.4f]\n", i, cls, m_validation_output[i], err_i);
+					if (cls != m_validation_output[i]) mismatchCount_validation++;
+				}
+				printf("\n\n\nsample result: %.2f%\n\n", 100.0 - (double)mismatchCount_train / (double)(m_input.size()) * 100.0);
+				printf("\n\n\nvalidation result: %.2f%\n\n", 100.0 - (double)mismatchCount_validation / (double)(m_validation_input.size()) * 100.0);
 			}
 			return ret;
 		}
@@ -705,8 +777,7 @@ namespace IMGP
 
 		void IMGP_Mlp_impl::set_mini_batch_size(int size)
 		{
-			if (m_sample_count > 1 && size <= m_sample_count)
-				m_batch_size = size;
+			m_batch_size = size;
 		}
 
 		bool IMGP_Mlp_impl::train_batch()
@@ -731,7 +802,7 @@ namespace IMGP
 			m_iter_batch = m_batch_size;
 			iter = 0;
 
-			while (iter++ < m_max_iter && m_error_eps < cur_error_sum)
+			while (iter < m_max_iter && m_error_eps < cur_error_sum)
 			{
 				if (m_regulation_enable_dropout)
 				{
@@ -764,16 +835,83 @@ namespace IMGP
 				}
 				back_propagation_bacth_solve();
 				cur_error_sum = 0;
+				
 				if (ret)
 				{
-					for (size_t i = 0; i < m_input.size(); ++i)
+					if (0 == iter % 10)
 					{
-						double err_i = 0;
-						int cls = getPredict(m_input[i], m_output[i], err_i);
-						cur_error_sum += err_i;
-						printf("%02d---[%d,%d,%.4f]\n", i, cls, m_output[i], err_i);
+						if (m_validation_input.empty())
+						{
+							int mismatchCount = 0;
+							if (0 == iter % 50)
+							{
+								for (size_t i = 0; i < m_input.size(); ++i)
+								{
+									double err_i = 0;
+									int cls = getPredict(m_input[i], m_output[i], err_i);
+									cur_error_sum += err_i;
+									printf("%06d---[%d,%d,%.4f]\n", i, cls, m_output[i], err_i);
+									if (cls != m_output[i])
+									{
+										mismatchCount++;
+									}
+								}
+							}
+							else
+							{
+								for (size_t i = 0; i < m_input.size(); ++i)
+								{
+									double err_i = 0;
+									int cls = getPredict(m_input[i], m_output[i], err_i);
+									cur_error_sum += err_i;
+									if (cls != m_output[i])
+									{
+										mismatchCount++;
+									}
+								}
+							}
+							cur_error_sum /= m_input.size();
+							printf("iter = %d, average err = %.4f, accuracy = %.2f%\n", iter, cur_error_sum, 100.0 - (double)mismatchCount / (double)(m_input.size()) * 100.0);
+						}
+						else
+						{
+							int mismatchCount = 0;
+							if (0 == iter % 50)
+							{
+								for (size_t i = 0; i < m_validation_input.size(); ++i)
+								{
+									double err_i = 0;
+									int cls = getPredict(m_validation_input[i], m_validation_output[i], err_i);
+									cur_error_sum += err_i;
+									printf("%06d---[%d,%d,%.4f]\n", i, cls, m_validation_output[i], err_i);
+									if (cls != m_validation_output[i])
+									{
+										mismatchCount++;
+									}
+								}
+							}
+							else
+							{
+								for (size_t i = 0; i < m_validation_input.size(); ++i)
+								{
+									double err_i = 0;
+									int cls = getPredict(m_validation_input[i], m_validation_output[i], err_i);
+									cur_error_sum += err_i;
+									if (cls != m_validation_output[i])
+									{
+										mismatchCount++;
+									}
+								}
+							}
+							cur_error_sum /= m_validation_input.size();
+							printf("iter = %d, average err = %.4f, accuracy = %.2f%\n", iter, cur_error_sum, 100.0 - (double)mismatchCount / (double)(m_validation_input.size()) * 100.0);
+						}
 					}
-					cur_error_sum /= m_input.size();
+					else
+					{
+						cur_error_sum = m_error_eps + 10.0;
+						printf("iter = %d\n", iter);
+					}
 				}
 				m_iter_batch += m_batch_size;
 				if (m_iter_batch > m_sample_count)
@@ -781,6 +919,7 @@ namespace IMGP
 					std::random_shuffle(m_loop_index.begin(), m_loop_index.end());
 					m_iter_batch = m_batch_size;
 				}
+				iter++;
 			}
 			printf("train times: %d\n", iter);
 			m_dropout_map.clear();
@@ -2357,10 +2496,10 @@ namespace IMGP
 			}
 			int idx_max = 0;
 			double v_max = m_neuron_value[m_neuron_value.size() - 1][0];
-			printf("%s%.5f\t", v_max >= 0.0 ? "+" : "", v_max);
+			//printf("%s%.5f\t", v_max >= 0.0 ? "+" : "", v_max);
 			for (size_t i = 1; i < m_neuron_value[m_neuron_value.size() - 1].size(); ++i)
 			{
-				printf("%s%.5f\t", m_neuron_value[m_neuron_value.size() - 1][i] >= 0.0 ? "+" : "", m_neuron_value[m_neuron_value.size() - 1][i]);
+				//printf("%s%.5f\t", m_neuron_value[m_neuron_value.size() - 1][i] >= 0.0 ? "+" : "", m_neuron_value[m_neuron_value.size() - 1][i]);
 				if (m_neuron_value[m_neuron_value.size() - 1][i] > v_max)
 				{
 					v_max = m_neuron_value[m_neuron_value.size() - 1][i];
